@@ -1,18 +1,4 @@
-# express-mongo-app
 
-Навчальний сервер на **Node.js + Express.js** з авторизацією через **Passport** (email + пароль, сесії),
-шаблонізаторами **PUG** та **EJS** і даними у хмарній базі **MongoDB Atlas** (бібліотека **Mongoose**).
-Проєкт побудований за патерном **MVC**.
-
-## Що нового (HW 65.1)
-
-- Сервер підключається до **MongoDB Atlas** через Mongoose; рядок підключення береться зі змінної `MONGODB_URI` (файл `.env`).
-- Користувачі та статті більше не зберігаються в пам'яті — вони лежать у колекціях **`users`** і **`articles`**
-  і **не зникають** після перезапуску сервера.
-- **Операція читання:** сторінки `/articles`, `/articles/:articleId`, `/users`, `/users/:userId` читають дані з MongoDB
-  і відображають їх (EJS для статей, PUG для користувачів).
-- Новий маршрут **`GET /health`** перевіряє з'єднання з базою (команда `ping`).
-- Під час першого запуску порожня база автоматично заповнюється тестовими даними.
 
 ## Можливості
 
@@ -24,25 +10,7 @@
 - Favicon, тема оформлення (cookie), CSS зі світлою та темною темою
 - Сервер слухає порт **3000**
 
-## Налаштування MongoDB Atlas
 
-1. Зареєструйтесь на <https://www.mongodb.com/cloud/atlas> і створіть безкоштовний кластер (**M0 / Free**).
-2. **Database Access** → *Add New Database User*: створіть користувача з логіном і паролем та правом читання/запису
-   (*Read and write to any database*). Запам'ятайте логін і пароль.
-3. **Network Access** → *Add IP Address*: додайте свою поточну IP-адресу (*Add Current IP Address*).
-   Для навчання можна дозволити будь-яку адресу `0.0.0.0/0`, але в реальному проєкті цього робити не слід.
-4. **Database** → кнопка *Connect* у вашому кластері → *Drivers* (Node.js) → скопіюйте рядок підключення. Він має вигляд:
-   ```
-   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
-   ```
-5. Підставте свої логін і пароль та додайте **назву бази** після `.mongodb.net/`, наприклад `express_app`:
-   ```
-   mongodb+srv://myUser:myPassword@cluster0.xxxxx.mongodb.net/express_app?retryWrites=true&w=majority
-   ```
-   Якщо в паролі є спецсимволи (`@ : / ? # %`), закодуйте їх: `@` → `%40`, `#` → `%23` тощо.
-   База та колекції створюються автоматично — вручну нічого створювати не потрібно.
-
-> Інтерфейс Atlas час від часу змінюється, назви кнопок можуть трохи відрізнятися, але порядок дій той самий.
 
 ## Встановлення та запуск
 
@@ -249,15 +217,3 @@ curl.exe -b cookies.txt -X POST http://localhost:3000/articles -H "Content-Type:
 | `querySrv ECONNREFUSED` / `ENOTFOUND _mongodb._tcp...`          | Мережа чи провайдер блокує SRV-запити DNS. Спробуйте інший DNS (напр. `8.8.8.8`) або «стандартний» рядок підключення з Atlas (формат `mongodb://...`) |
 | Після перезапуску потрібно знову входити                        | Дані в базі збережені, але **сесії** зберігаються в пам'яті сервера. Для production використайте сховище сесій (Redis, `connect-mongo`) |
 
-## Публікація в Git
-
-```bash
-git init
-git add .
-git commit -m "Add MongoDB Atlas integration (Mongoose)"
-git branch -M main
-git remote add origin <URL-вашого-репозиторію>
-git push -u origin main
-```
-
-Перед `git add .` переконайтеся, що файл `.env` не потрапляє в індекс: `git status` не повинен його показувати.
